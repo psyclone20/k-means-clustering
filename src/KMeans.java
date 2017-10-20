@@ -19,91 +19,95 @@ public class KMeans {
 		System.out.print("Enter the index of the Y-attribute: ");
 		int yAttribute = sc.nextInt();
 
-        // Open file again to read the records
+		// Open file again to read the records
 		double[][] points = new double[records][2];
-        readRecords(filePath, fileName, points, xAttribute, yAttribute);
+		readRecords(filePath, fileName, points, xAttribute, yAttribute);
 
-        // Sort the points based on X-coordinate values
-        sortPointsByX(points);
+		// Sort the points based on X-coordinate values
+		sortPointsByX(points);
 
-        // Input number of clusters
-        System.out.print("Enter the number of clusters to form: ");
-        int clusters = sc.nextInt();
+		// Input the number of iterations
+		System.out.print("Enter the maximum number of iterations: ");
+		int maxIterations = sc.nextInt();
+        
+		// Input number of clusters
+		System.out.print("Enter the number of clusters to form: ");
+		int clusters = sc.nextInt();
 
-        // Calculate initial means
-        double[][] means = new double[clusters][2];
-        for(int i=0; i<means.length; i++) {
-        	means[i][0] = points[(int) (Math.floor((records*1.0/clusters)/2) + i*records/clusters)][0];
-        	means[i][1] = points[(int) (Math.floor((records*1.0/clusters)/2) + i*records/clusters)][1];
-        }
+		// Calculate initial means
+		double[][] means = new double[clusters][2];
+		for(int i=0; i<means.length; i++) {
+			means[i][0] = points[(int) (Math.floor((records*1.0/clusters)/2) + i*records/clusters)][0];
+			means[i][1] = points[(int) (Math.floor((records*1.0/clusters)/2) + i*records/clusters)][1];
+		}
 
-        // Create skeletons for clusters
-        ArrayList<Integer>[] oldClusters = new ArrayList[clusters];
-        ArrayList<Integer>[] newClusters = new ArrayList[clusters];
+		// Create skeletons for clusters
+		ArrayList<Integer>[] oldClusters = new ArrayList[clusters];
+		ArrayList<Integer>[] newClusters = new ArrayList[clusters];
 
-        for(int i=0; i<clusters; i++) {
-        	oldClusters[i] = new ArrayList<Integer>();
-        	newClusters[i] = new ArrayList<Integer>();
-        }
+		for(int i=0; i<clusters; i++) {
+			oldClusters[i] = new ArrayList<Integer>();
+			newClusters[i] = new ArrayList<Integer>();
+		}
 
-        // Make the initial clusters
-        formClusters(oldClusters, means, points);
-        int iterations = 0;
+		// Make the initial clusters
+		formClusters(oldClusters, means, points);
+		int iterations = 0;
 
-        // Showtime
-        while(true) {
-        	updateMeans(oldClusters, means, points);
-        	formClusters(newClusters, means, points);
+		// Showtime
+		while(true) {
+			updateMeans(oldClusters, means, points);
+			formClusters(newClusters, means, points);
 
-        	iterations++;
+			iterations++;
 
-        	if(iterations > 1000000 || checkEquality(oldClusters, newClusters))
-        		break;
-        	else
-        		resetClusters(oldClusters, newClusters);
-        }
+			if(iterations > maxIterations || checkEquality(oldClusters, newClusters))
+				break;
+			else
+				resetClusters(oldClusters, newClusters);
+		}
 
-        // Display the output
-        System.out.println("\nThe final clusters are:");
-        displayOutput(oldClusters, points);
-        System.out.println("\nIterations taken = " + iterations);
+		// Display the output
+		System.out.println("\nThe final clusters are:");
+		displayOutput(oldClusters, points);
+		System.out.println("\nIterations taken = " + iterations);
 
-        sc.close();
+		sc.close();
 	}
 
 	static int getRecords(String filePath, String fileName) throws IOException {
 		int records = 0;
 		BufferedReader br = new BufferedReader(new FileReader(filePath + fileName + ".csv"));
-        while (br.readLine() != null)
-        	records++;
+		while (br.readLine() != null)
+			records++;
 
-        br.close();
-        return records;
+		br.close();
+		return records;
 	}
 
 	static void readRecords(String filePath, String fileName, double[][] points, int xAttribute, int yAttribute) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(filePath + fileName + ".csv"));
 		String line;
 		int i = 0;
-        while ((line = br.readLine()) != null) {
-        	points[i][0] = Double.parseDouble(line.split(",")[xAttribute]);
-        	points[i++][1] = Double.parseDouble(line.split(",")[yAttribute]);
-        }
+		while ((line = br.readLine()) != null) {
+			points[i][0] = Double.parseDouble(line.split(",")[xAttribute]);
+			points[i++][1] = Double.parseDouble(line.split(",")[yAttribute]);
+		}
 
-        br.close();
+		br.close();
 	}
 
 	static void sortPointsByX(double[][] points) {
 		double[] temp;
-		
+
 		// Bubble Sort
 		for(int i=0; i<points.length; i++)
-            for(int j=1; j<(points.length-i); j++)
-            	if(points[j-1][0] > points[j][0]) {
-                    temp = points[j-1];
-                    points[j-1] = points[j];
-                    points[j] = temp;
-            	}
+		    for(int j=1; j<(points.length-i); j++)
+			if(points[j-1][0] > points[j][0]) {
+			    temp = points[j-1];
+			    points[j-1] = points[j];
+			    points[j] = temp;
+			}
 	}
 
 	static void updateMeans(ArrayList<Integer>[] clusterList, double[][] means, double[][] points) {
@@ -168,10 +172,10 @@ public class KMeans {
 
 	static void displayOutput(ArrayList<Integer>[] clusterList, double[][] points) {
 		for(int i=0; i<clusterList.length; i++) {
-        	String clusterOutput = "\n\n[";
-        	for(int index: clusterList[i])
-        		clusterOutput += "(" + points[index][0] + ", " + points[index][1] + "), ";
-        	System.out.println(clusterOutput.substring(0, clusterOutput.length()-2) + "]");
-        }
+		String clusterOutput = "\n\n[";
+		for(int index: clusterList[i])
+			clusterOutput += "(" + points[index][0] + ", " + points[index][1] + "), ";
+		System.out.println(clusterOutput.substring(0, clusterOutput.length()-2) + "]");
 	}
+}
 }
