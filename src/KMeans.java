@@ -172,10 +172,10 @@ public class KMeans {
 
 	static void displayOutput(ArrayList<Integer>[] clusterList, double[][] points) {
 		for(int i=0; i<clusterList.length; i++) {
-		String clusterOutput = "\n\n[";
-		for(int index: clusterList[i])
-			clusterOutput += "(" + points[index][0] + ", " + points[index][1] + "), ";
-		System.out.println(clusterOutput.substring(0, clusterOutput.length()-2) + "]");
+			String clusterOutput = "\n\n[";
+			for(int index: clusterList[i])
+				clusterOutput += "(" + points[index][0] + ", " + points[index][1] + "), ";
+			System.out.println(clusterOutput.substring(0, clusterOutput.length()-2) + "]");
+		}
 	}
-}
 }
