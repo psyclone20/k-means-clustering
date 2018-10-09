@@ -3,7 +3,7 @@ A Java program to cluster a dataset in CSV format using k-means clustering
 
 # Input
 The user must provide the following inputs:
-* Name of the CSV dataset
+* Name of the CSV dataset (make sure that the header line is removed)
 * The X and Y attributes from the dataset
 * The number of clusters
 * The maximum number of iterations
